@@ -1,7 +1,11 @@
 package config
 
+//默认
 const DEFAULT  = 0
+//花瓣网
 const HUABAN  = 1
+//图虫网
+const TUCHONG  = 2
 
 var ImgDir = "./img/"
 
@@ -10,11 +14,11 @@ var UrlConvert = map[string]int{
 	"huaban.com": HUABAN,
 }
 
+//每个站点所用的正则
 var SiteReg = map[int][]string {
 	HUABAN: {
-		`^(https?://hbimg\.[a-zA-Z0-9]{2,5}\.upaiyun\.com/.*?)_[a-zA-Z0-9]{2,8}$`,
-		`^(https?://img\.hb\.aicdn\.com/.*?)_[a-zA-Z0-9]{2,8}$`,
-		`^(https?://hbimg\.huabanimg\.com/.*?)_[a-zA-Z0-9]{2,8}$`,
+		`"pin_id":(\d+),`,
+		`"key":"(.*?)"`,
 	},
 	DEFAULT:{
 

@@ -6,6 +6,9 @@ import (
 	"net/url"
 )
 
+var imgDir = config.ImgDir
+var subImgDir = ""
+
 //根据目标地址获取对应配置
 func DownloadImg(targetUrl string) {
 	//解析并获取输入地址的域名

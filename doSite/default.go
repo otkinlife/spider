@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 )
-
-var imgDir = config.ImgDir
 
 type SiteDeFault struct {
 	Site
@@ -23,11 +22,22 @@ func (s *SiteDeFault)Download() {
 		panic("get img url failed")
 	}
 	fmt.Println("总抓取图片数量：", len(urlList))
-	i := 1;
+
+	//检查目录是否存在
+	imgDir = imgDir + subImgDir + "/"
+	file, err := os.Stat(imgDir)
+	if err != nil || !file.IsDir() {
+		err := os.Mkdir(imgDir, os.ModePerm)
+		if err != nil {
+			panic("create dir failed")
+		}
+	}
+
+	//需要计算图片序号
+	i := 0
 	for _, imgUrl := range urlList {
-		fmt.Printf("\r当前进度：%d", i)
 		i++
-		go s.downloadImg(imgUrl)
+		go s.downloadImg(imgUrl, i)
 	}
 }
 
@@ -47,13 +57,13 @@ func (s *SiteDeFault)getImgUrls() []string {
 	if err != nil {
 		panic(err)
 	}
-
-	// Find the review items
+	subImgDir = doc.Find("title").Text()
+	//处理url对象
 	doc.Find("img").Each(func(i int, s *goquery.Selection) {
 		// For each item found, get the band and title
 		url, _ := s.Attr("src")
 		re := regexp.MustCompile(`^(https|http).*`)
-		if (re.MatchString(url)) {
+		if re.MatchString(url) {
 			urlList = append(urlList, url)
 		}
 	})
@@ -61,17 +71,10 @@ func (s *SiteDeFault)getImgUrls() []string {
 }
 
 //下载图片
-func (s *SiteDeFault)downloadImg(url string) {
+func (s *SiteDeFault)downloadImg(url string, preNo int) {
 	config.WG.Add(1)
-	//检查目录是否存在
-	file, err := os.Stat(imgDir)
-	if err != nil || !file.IsDir() {
-		err := os.Mkdir(imgDir, os.ModePerm)
-		if err != nil {
-			panic("create dir failed")
-		}
-	}
-	saveImages(url, imgDir)
+	prefix := strconv.Itoa(preNo)  + "_"
+	saveImages(url, imgDir, prefix)
 	config.WG.Done()
 }
 

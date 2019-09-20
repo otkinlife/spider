@@ -31,9 +31,9 @@ func GetTypeObj(host string) Site {
 }
 
 //下载图片
-func saveImages(imgUrl string, dir string) {
+func saveImages(imgUrl string, dir string, prefix string) {
 	//去掉最左边的'/'
-	filename := dir + RandString(16) + ".jpg"
+	filename := dir + prefix + RandString(16) + ".jpg"
 
 	exists := checkExists(filename)
 	if exists {
