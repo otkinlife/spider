@@ -6,7 +6,7 @@ import (
 	"net/url"
 )
 
-var imgDir = config.ImgDir
+var imgDir = ""
 var subImgDir = ""
 
 //根据目标地址获取对应配置

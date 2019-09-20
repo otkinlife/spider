@@ -24,7 +24,7 @@ func (s *SiteDeFault)Download() {
 	fmt.Println("总抓取图片数量：", len(urlList))
 
 	//检查目录是否存在
-	imgDir = imgDir + subImgDir + "/"
+	imgDir = config.ImgDir + subImgDir + "/"
 	file, err := os.Stat(imgDir)
 	if err != nil || !file.IsDir() {
 		err := os.Mkdir(imgDir, os.ModePerm)

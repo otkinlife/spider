@@ -26,8 +26,8 @@ func (s *SiteHuaBan) Download() {
 
 	fmt.Println("总抓取图片数量：", len(urlList))
 	//检查目录是否存在
-	imgDir = imgDir + subImgDir + "/"
-	fmt.Println(imgDir)
+	imgDir = config.ImgDir + subImgDir + "/"
+	fmt.Println("图片保存路径：",imgDir)
 	file, err := os.Stat(imgDir)
 	if err != nil || !file.IsDir() {
 		err := os.Mkdir(imgDir, os.ModePerm)

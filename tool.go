@@ -18,14 +18,20 @@ func init() {
 }
 
 func main() {
-	if url == "" {
-		fmt.Println("地址不能为空")
-		return
+	fmt.Println("启动客户端")
+	fmt.Println("Ctrl C Quit")
+	for {
+		url = ""
+		fmt.Println("请输入要抓取的地址...")
+		_, _ = fmt.Scanln(&url)
+		if url == "" {
+			fmt.Println("url不能为空")
+			continue
+		}
+		fmt.Println("目标地址：", url)
+		fmt.Println("任务开始：")
+		doSite.DownloadImg(url)
+		config.WG.Wait()
 	}
-	fmt.Println(config.ImgDir)
-	fmt.Println("目标地址：", url)
-	fmt.Println("任务开始：")
-	doSite.DownloadImg(url)
-	config.WG.Wait()
 	fmt.Println("\n任务结束")
 }
