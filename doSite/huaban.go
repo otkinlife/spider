@@ -20,9 +20,10 @@ type SiteHuaBan struct {
 func (s *SiteHuaBan) Download() {
 	subImgDir = strconv.FormatInt(time.Now().Unix(), 10)
 	urlList := s.getImgUrls()
-	if urlList == nil {
-		panic("get img url failed")
+	if urlList == nil || len(urlList) == 0  {
+		panic("获取不到图片")
 	}
+
 	fmt.Println("总抓取图片数量：", len(urlList))
 	//检查目录是否存在
 	imgDir = imgDir + subImgDir + "/"
@@ -31,7 +32,7 @@ func (s *SiteHuaBan) Download() {
 	if err != nil || !file.IsDir() {
 		err := os.Mkdir(imgDir, os.ModePerm)
 		if err != nil {
-			panic("create dir failed")
+			panic("创建文件夹失败")
 		}
 	}
 
@@ -50,7 +51,7 @@ func (s *SiteHuaBan) getImgUrls() []string {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		panic("status code error")
+		panic("目标地址请求失败")
 	}
 	htmlBytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
