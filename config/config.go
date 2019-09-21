@@ -25,7 +25,7 @@ var SiteReg = map[int][]string{
 		`"key":"(.*?)"`,
 	},
 	TUCHONG: {
-		`"imageId":(\d+),`,
+		`"imageId":"(.*?)",`,
 	},
 	DEFAULT: {},
 }

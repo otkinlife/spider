@@ -51,7 +51,7 @@ func (s *SiteTuChong) getImgUrls() []string {
 	request, err := http.NewRequest("GET", s.url, nil)
 
 	//增加header选项
-	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
+	request.Header.Add("Cookie", "lang=zh;")
 
 	if err != nil {
 		panic(err)
