@@ -6,11 +6,12 @@ import (
 	"net/url"
 )
 
-var imgDir = ""
+var outDir = ""
 var subImgDir = ""
 
 //根据目标地址获取对应配置
-func DownloadImg(targetUrl string) {
+func DownloadImg(targetUrl string, dir string) {
+	outDir = dir
 	//解析并获取输入地址的域名
 	u, err := url.Parse(targetUrl)
 	if err != nil {
@@ -22,6 +23,13 @@ func DownloadImg(targetUrl string) {
 	case config.HUABAN:
 		fmt.Println("检测为花瓣网")
 		dObj := SiteHuaBan{
+			siteObj,
+			targetUrl,
+		}
+		dObj.Download()
+	case config.TUCHONG:
+		fmt.Printf("检测为图虫网")
+		dObj := SiteTuChong{
 			siteObj,
 			targetUrl,
 		}

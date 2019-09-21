@@ -12,14 +12,12 @@ import (
 	"time"
 )
 
-type SiteHuaBan struct {
+type SiteTuChong struct {
 	Site
 	url string
 }
 
-var imgDir string
-
-func (s *SiteHuaBan) Download() {
+func (s *SiteTuChong) Download() {
 	subImgDir = strconv.FormatInt(time.Now().Unix(), 10)
 	urlList := s.getImgUrls()
 	if urlList == nil || len(urlList) == 0 {
@@ -28,7 +26,7 @@ func (s *SiteHuaBan) Download() {
 
 	fmt.Println("总抓取图片数量：", len(urlList))
 	//检查目录是否存在
-	imgDir = outDir + subImgDir + "/"
+	imgDir = config.ImgDir + subImgDir + "/"
 	fmt.Println("图片保存路径：", imgDir)
 	file, err := os.Stat(imgDir)
 	if err != nil || !file.IsDir() {
@@ -45,12 +43,21 @@ func (s *SiteHuaBan) Download() {
 	}
 }
 
-func (s *SiteHuaBan) getImgUrls() []string {
+func (s *SiteTuChong) getImgUrls() []string {
 	var urlList []string
-	res, err := http.Get(s.url)
+	client := &http.Client{}
+	//生成要访问的url
+	//提交请求
+	request, err := http.NewRequest("GET", s.url, nil)
+
+	//增加header选项
+	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
+
 	if err != nil {
 		panic(err)
 	}
+	//处理返回结果
+	res, _ := client.Do(request)
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
 		panic("目标地址请求失败")
@@ -61,22 +68,18 @@ func (s *SiteHuaBan) getImgUrls() []string {
 	}
 	htmlCode := string(htmlBytes)
 	//使用正则匹配图片key
-	reg := regexp.MustCompile(s.Site.Reg[1])
+	reg := regexp.MustCompile(s.Site.Reg[0])
 	keys := reg.FindAllStringSubmatch(htmlCode, -1)
 	var url string
 	for i := 0; i < len(keys); i++ {
 		key := keys[i][1]
-		// 过滤掉非图片类型的key
-		if len(key) < 46 {
-			continue
-		}
-		url = "https://hbimg.huabanimg.com/" + key
+		url = "http://icweiliimg6.pstatp.com/weili/l/" + key + ".webp"
 		urlList = append(urlList, url)
 	}
 	return urlList
 }
 
-func (s *SiteHuaBan) downloadImg(url string, preNo int) {
+func (s *SiteTuChong) downloadImg(url string, preNo int) {
 	config.WG.Add(1)
 	prefix := strconv.Itoa(preNo) + "_"
 	saveImages(url, imgDir, prefix)

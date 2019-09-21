@@ -16,9 +16,9 @@ type SiteDeFault struct {
 }
 
 //解析并下载图片
-func (s *SiteDeFault)Download() {
+func (s *SiteDeFault) Download() {
 	urlList := s.getImgUrls()
-	if urlList == nil || len(urlList) == 0  {
+	if urlList == nil || len(urlList) == 0 {
 		panic("获取不到图片")
 	}
 	fmt.Println("总抓取图片数量：", len(urlList))
@@ -42,7 +42,7 @@ func (s *SiteDeFault)Download() {
 }
 
 //从页面解析<img>标签，并返回url列表
-func (s *SiteDeFault)getImgUrls() []string {
+func (s *SiteDeFault) getImgUrls() []string {
 	var urlList []string
 	res, err := http.Get(s.url)
 	if err != nil {
@@ -71,10 +71,9 @@ func (s *SiteDeFault)getImgUrls() []string {
 }
 
 //下载图片
-func (s *SiteDeFault)downloadImg(url string, preNo int) {
+func (s *SiteDeFault) downloadImg(url string, preNo int) {
 	config.WG.Add(1)
-	prefix := strconv.Itoa(preNo)  + "_"
+	prefix := strconv.Itoa(preNo) + "_"
 	saveImages(url, imgDir, prefix)
 	config.WG.Done()
 }
-
