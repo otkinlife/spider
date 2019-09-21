@@ -8,7 +8,6 @@ import (
 )
 
 var url string
-
 func init() {
 	//初始化目标地址和输出目录
 	flag.StringVar(&url, "url", "", "抓取目标地址")
@@ -19,15 +18,6 @@ func init() {
 }
 
 func main() {
-	if url == "" {
-		client()
-	} else {
-		doSite.DownloadImg(url)
-		config.WG.Wait()
-	}
-}
-
-func client() {
 	fmt.Println("启动客户端")
 	fmt.Println("Ctrl C Quit")
 	for {
@@ -42,6 +32,6 @@ func client() {
 		fmt.Println("任务开始：")
 		doSite.DownloadImg(url)
 		config.WG.Wait()
-		fmt.Println("\n任务结束")
 	}
+	fmt.Println("\n任务结束")
 }
