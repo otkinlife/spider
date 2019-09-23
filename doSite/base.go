@@ -2,6 +2,7 @@ package doSite
 
 import (
 	"../config"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -18,16 +19,36 @@ type Site struct {
 
 var r = rand.New(rand.NewSource(time.Now().Unix()))
 
-//获取对应站点对象
-func GetTypeObj(host string) Site {
+//获取对应站点对象，并返回相关配置对象
+func GetTypeObj(host string, targetUrl string) SiteDownload {
 	siteType := config.UrlConvert[host]
 	siteObj := Site{
 		siteType,
 		host,
 		config.SiteReg[siteType],
 	}
-	return siteObj
-
+	var dObj SiteDownload
+	switch siteObj.Site {
+	case config.HUABAN:
+		fmt.Println("检测为花瓣网")
+		dObj = &SiteHuaBan{
+			siteObj,
+			targetUrl,
+		}
+	case config.TUCHONG:
+		fmt.Printf("检测为图虫网")
+		dObj = &SiteTuChong{
+			siteObj,
+			targetUrl,
+		}
+	default:
+		fmt.Println("未匹配站点，使用默认方式")
+		dObj = &SiteDeFault{
+			siteObj,
+			targetUrl,
+		}
+	}
+	return dObj
 }
 
 //下载图片

@@ -1,7 +1,6 @@
 package doSite
 
 import (
-	"../config"
 	"fmt"
 	"net/url"
 )
@@ -18,28 +17,8 @@ func DownloadImg(targetUrl string, dir string) {
 		panic(err)
 	}
 	fmt.Println(u.Host)
-	siteObj := GetTypeObj(u.Host)
-	switch siteObj.Site {
-	case config.HUABAN:
-		fmt.Println("检测为花瓣网")
-		dObj := SiteHuaBan{
-			siteObj,
-			targetUrl,
-		}
-		dObj.Download()
-	case config.TUCHONG:
-		fmt.Printf("检测为图虫网")
-		dObj := SiteTuChong{
-			siteObj,
-			targetUrl,
-		}
-		dObj.Download()
-	default:
-		fmt.Println("未匹配站点，使用默认方式")
-		dObj := SiteDeFault{
-			siteObj,
-			targetUrl,
-		}
-		dObj.Download()
-	}
+	dObj := GetTypeObj(u.Host, targetUrl)
+	dObj.Download()
 }
+
+
