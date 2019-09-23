@@ -8,38 +8,36 @@ import (
 	"os"
 )
 
+var mode string
 var url string
 var outDir string
 
 func init() {
 	//初始化目标地址和输出目录
-	flag.StringVar(&url, "url", "", "抓取目标地址")
-	flag.StringVar(&outDir, "out", "", "输出目录")
+	flag.StringVar(&mode, "m", "client", "启动模式,默认client")
+	flag.StringVar(&url, "u", "", "抓取目标地址")
+	flag.StringVar(&outDir, "o", "", "输出目录")
 	flag.Parse()
 	flag.Usage = func() {
-		fmt.Printf("./spider --url=xxxx")
+		fmt.Printf("./spider -m=script -u=http://xxxx.com -p=/xxx/xxx/")
 	}
 }
 
 func main() {
-	if url == "" {
+	switch mode {
+	case "daemon":
+		daemon()
+		break
+	case "script":
+		script()
+		break
+	case "client":
+	default:
 		client()
-	} else {
-		if outDir == "" {
-			outDir = config.ImgDir
-		}
-		file, err := os.Stat(outDir)
-		if err != nil || !file.IsDir() {
-			err := os.Mkdir(outDir, os.ModePerm)
-			if err != nil {
-				panic(err)
-			}
-		}
-		doSite.DownloadImg(url, outDir)
-		config.WG.Wait()
 	}
 }
 
+//启动客户端模式
 func client() {
 	fmt.Println("启动客户端")
 	fmt.Println("Ctrl C Quit")
@@ -69,4 +67,26 @@ func client() {
 		config.WG.Wait()
 		fmt.Println("\n任务结束")
 	}
+}
+
+//脚本模式
+func script() {
+	if outDir == "" {
+		outDir = config.ImgDir
+	}
+	file, err := os.Stat(outDir)
+	if err != nil || !file.IsDir() {
+		err := os.Mkdir(outDir, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+	}
+	doSite.DownloadImg(url, outDir)
+	config.WG.Wait()
+}
+
+//守护进程模式
+func daemon() {
+	fmt.Println("努力实现....")
+	//TODO：实现守护进程，类似于一个队列
 }
