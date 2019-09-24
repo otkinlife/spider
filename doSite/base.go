@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -86,6 +88,14 @@ func saveImages(imgUrl string, dir string, prefix string) bool {
 	defer image.Close()
 	_, _ = image.Write(data)
 	return true
+}
+
+func GetSchedule(i int, sum int) string {
+	var schedule float64
+	schedule = float64(i) / float64(sum)
+	schedule = math.Trunc(schedule * 100)
+	fmt.Print("\r","下载进度：", schedule, "%")
+	return "\r下载进度：" + strconv.Itoa(int(schedule)) + "%"
 }
 
 //检测文件是否存在

@@ -15,7 +15,7 @@ import (
 type SiteTuChong struct {
 	Site
 	url string
-	c chan string
+	c   chan string
 }
 
 func (s *SiteTuChong) Download() {
@@ -41,8 +41,9 @@ func (s *SiteTuChong) Download() {
 	for _, imgUrl := range urlList {
 		i++
 		go s.downloadImg(imgUrl, i)
-		report := <- s.c
-		fmt.Println(report)
+		if <-s.c != "" {
+			fmt.Print(GetSchedule(i, len(urlList)))
+		}
 	}
 }
 

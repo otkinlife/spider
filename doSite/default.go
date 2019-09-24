@@ -38,8 +38,9 @@ func (s *SiteDeFault) Download() {
 	for _, imgUrl := range urlList {
 		i++
 		go s.downloadImg(imgUrl, i)
-		report := <- s.c
-		fmt.Println(report)
+		if <-s.c != "" {
+			fmt.Print(GetSchedule(i, len(urlList)))
+		}
 	}
 }
 
