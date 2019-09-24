@@ -27,6 +27,7 @@ func GetTypeObj(host string, targetUrl string) SiteDownload {
 		host,
 		config.SiteReg[siteType],
 	}
+	c := make(chan string)
 	var dObj SiteDownload
 	switch siteObj.Site {
 	case config.HUABAN:
@@ -34,53 +35,57 @@ func GetTypeObj(host string, targetUrl string) SiteDownload {
 		dObj = &SiteHuaBan{
 			siteObj,
 			targetUrl,
+			c,
 		}
 	case config.TUCHONG:
 		fmt.Printf("检测为图虫网")
 		dObj = &SiteTuChong{
 			siteObj,
 			targetUrl,
+			c,
 		}
 	default:
 		fmt.Println("未匹配站点，使用默认方式")
 		dObj = &SiteDeFault{
 			siteObj,
 			targetUrl,
+			c,
 		}
 	}
 	return dObj
 }
 
 //下载图片
-func saveImages(imgUrl string, dir string, prefix string) {
+func saveImages(imgUrl string, dir string, prefix string) bool {
 	//去掉最左边的'/'
 	filename := dir + prefix + RandString(16) + ".jpg"
 
 	exists := checkExists(filename)
 	if exists {
-		return
+		return true
 	}
 	//获取静态页面
 	response, err := http.Get(imgUrl)
 	if err != nil {
 		log.Println("get img_url failed:", err)
-		return
+		return false
 	}
 	defer response.Body.Close()
 
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Println("read data failed:", imgUrl, err)
-		return
+		return false
 	}
 
 	image, err := os.Create(filename)
 	if err != nil {
 		log.Println("create file failed:", filename, err)
-		return
+		return false
 	}
 	defer image.Close()
 	_, _ = image.Write(data)
+	return true
 }
 
 //检测文件是否存在

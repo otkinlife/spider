@@ -13,6 +13,7 @@ import (
 type SiteDeFault struct {
 	Site
 	url string
+	c chan string
 }
 
 //解析并下载图片
@@ -24,7 +25,7 @@ func (s *SiteDeFault) Download() {
 	fmt.Println("总抓取图片数量：", len(urlList))
 
 	//检查目录是否存在
-	imgDir = config.ImgDir + subImgDir + "/"
+	imgDir = outDir + subImgDir + "/"
 	file, err := os.Stat(imgDir)
 	if err != nil || !file.IsDir() {
 		err := os.Mkdir(imgDir, os.ModePerm)
@@ -32,12 +33,13 @@ func (s *SiteDeFault) Download() {
 			panic("创建文件夹失败")
 		}
 	}
-
 	//需要计算图片序号
 	i := 0
 	for _, imgUrl := range urlList {
 		i++
 		go s.downloadImg(imgUrl, i)
+		report := <- s.c
+		fmt.Println(report)
 	}
 }
 
@@ -74,6 +76,13 @@ func (s *SiteDeFault) getImgUrls() []string {
 func (s *SiteDeFault) downloadImg(url string, preNo int) {
 	config.WG.Add(1)
 	prefix := strconv.Itoa(preNo) + "_"
-	saveImages(url, imgDir, prefix)
+	res := saveImages(url, imgDir, prefix)
+	var str string
+	if res {
+		str = prefix + "下载成功"
+	} else {
+		str = prefix + "下载失败"
+	}
+	s.c <- str
 	config.WG.Done()
 }

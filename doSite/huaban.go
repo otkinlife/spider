@@ -15,6 +15,7 @@ import (
 type SiteHuaBan struct {
 	Site
 	url string
+	c chan string
 }
 
 var imgDir string
@@ -42,6 +43,8 @@ func (s *SiteHuaBan) Download() {
 	for _, imgUrl := range urlList {
 		i++
 		go s.downloadImg(imgUrl, i)
+		report := <- s.c
+		fmt.Println(report)
 	}
 }
 
@@ -79,6 +82,13 @@ func (s *SiteHuaBan) getImgUrls() []string {
 func (s *SiteHuaBan) downloadImg(url string, preNo int) {
 	config.WG.Add(1)
 	prefix := strconv.Itoa(preNo) + "_"
-	saveImages(url, imgDir, prefix)
+	res := saveImages(url, imgDir, prefix)
+	var str string
+	if res {
+		str = prefix + "下载成功"
+	} else {
+		str = prefix + "下载失败"
+	}
+	s.c <- str
 	config.WG.Done()
 }

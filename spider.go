@@ -24,6 +24,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println(mode)
 	switch mode {
 	case "daemon":
 		daemon()
@@ -32,8 +33,8 @@ func main() {
 		script()
 		break
 	case "client":
-	default:
 		client()
+		break
 	}
 }
 
@@ -74,6 +75,7 @@ func script() {
 	if outDir == "" {
 		outDir = config.ImgDir
 	}
+	fmt.Println(outDir)
 	file, err := os.Stat(outDir)
 	if err != nil || !file.IsDir() {
 		err := os.Mkdir(outDir, os.ModePerm)

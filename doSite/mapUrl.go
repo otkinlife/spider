@@ -17,6 +17,7 @@ func DownloadImg(targetUrl string, dir string) {
 		panic(err)
 	}
 	fmt.Println(u.Host)
+	//根据域名获取对应站点的对象
 	dObj := GetTypeObj(u.Host, targetUrl)
 	dObj.Download()
 }
