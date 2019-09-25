@@ -29,7 +29,7 @@ func GetTypeObj(host string, targetUrl string) SiteDownload {
 		host,
 		config.SiteReg[siteType],
 	}
-	c := make(chan string)
+	c := make(chan string, 10)
 	var dObj SiteDownload
 	switch siteObj.Site {
 	case config.HUABAN:
