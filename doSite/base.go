@@ -33,27 +33,25 @@ func GetTypeObj(host string, targetUrl string) SiteDownload {
 	var dObj SiteDownload
 	switch siteObj.Site {
 	case config.HUABAN:
-		fmt.Println("检测为花瓣网")
 		dObj = &SiteHuaBan{
 			siteObj,
 			targetUrl,
 			c,
 		}
 	case config.TUCHONG:
-		fmt.Printf("检测为图虫网")
 		dObj = &SiteTuChong{
 			siteObj,
 			targetUrl,
 			c,
 		}
 	default:
-		fmt.Println("未匹配站点，使用默认方式")
 		dObj = &SiteDeFault{
 			siteObj,
 			targetUrl,
 			c,
 		}
 	}
+	fmt.Println("检测为", dObj)
 	return dObj
 }
 
@@ -94,7 +92,7 @@ func GetSchedule(i int, sum int) string {
 	var schedule float64
 	schedule = float64(i) / float64(sum)
 	schedule = math.Trunc(schedule * 100)
-	fmt.Print("\r","下载进度：", schedule, "%")
+	fmt.Print("\r", "下载进度：", schedule, "%")
 	return "\r下载进度：" + strconv.Itoa(int(schedule)) + "%"
 }
 

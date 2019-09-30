@@ -87,3 +87,7 @@ func (s *SiteDeFault) downloadImg(url string, preNo int) {
 	s.c <- str
 	config.WG.Done()
 }
+
+func (s *SiteDeFault) String() string {
+	return "未识别网站"
+}

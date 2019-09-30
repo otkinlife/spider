@@ -96,3 +96,7 @@ func (s *SiteTuChong) downloadImg(url string, preNo int) {
 	s.c <- str
 	config.WG.Done()
 }
+
+func (s *SiteTuChong) String() string {
+	return "图虫网"
+}

@@ -93,3 +93,7 @@ func (s *SiteHuaBan) downloadImg(url string, preNo int) {
 	s.c <- str
 	config.WG.Done()
 }
+
+func (s *SiteHuaBan) String() string {
+	return "图虫网"
+}
